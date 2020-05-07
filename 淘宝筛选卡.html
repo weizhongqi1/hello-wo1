@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="./vue.js"></script>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+        }
+        #app{
+            width: 500px;
+            margin-top: 50px;
+            margin-left: 50px;
+            border: 1px solid #ccc;
+        }
+        .sh{
+            display: inline-block;
+            border: 1px solid #ccc;
+            margin: 10px;
+            padding: 5px;
+        }
+        .shai{
+            margin: 10px 0;
+        }
+        .active{
+            background-color: orange;
+        }
+        .tiaoj{
+            display: inline-block;
+            border: 1px solid #ccc;
+            margin: 0 10px ;
+            padding: 0 5px ;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div>
+            <span>上装:</span>
+            <span v-for="(sh, index) in shang.arr" :key="sh" class="sh" @click="handleAdd(index, shang)" :class="{'active' : index == shang.wei}">{{sh}}</span>
+        </div>
+        <div>
+            <span>下装:</span>
+            <span v-for="(xi, index) in xia.arr" :key="xi" class="sh"  @click="handleAdd(index, xia)" :class="{'active' : index == xia.wei}">{{xi}}</span>
+
+        </div>
+        <div>
+            <span>裙装:</span>
+            <span v-for="(qu, index) in qun.arr" :key="qu" class="sh" @click="handleAdd(index, qun)" :class="{'active' : index == qun.wei}">{{qu}}</span>
+        </div>
+        <div class="shai">
+            <span>筛选:</span>
+            <span v-if="pand">暂无筛选</span>
+            <span v-for="(sha, index) in shai" :key="index" v-else class="tiaoj" @click="deleteIndex(index)">{{sha}}</span>
+        </div>
+    </div>
+    <script>
+        const vm = new Vue({
+            el: '#app',
+            data:{
+                shang: {
+                    arr: ['全部', '卫衣', '短袖', '长袖', '时髦' ],
+                    wei: 0,
+                    name: 'shang'
+                    },
+                xia: {
+                    arr: ['全部', '短裤', '长裤', '连衣', '时髦' ],
+                    wei: 0,
+                    name: 'xia'
+                    },
+                qun: {
+                    arr: ['全部', '短裙', '长裙', '小裙裙', '时髦' ],
+                    wei: 0,
+                    name: 'qun'
+                },
+                shai: {},
+                pand: true
+            },
+            methods: {
+                handleAdd(index, obj){
+                    obj.wei = index;
+                    this.$set(this.shai, obj.name, obj.arr[index]);
+                    if(this.shang.wei === 0 && this.xia.wei === 0 && this.qun.wei === 0){
+                        this.pand = true;
+                    }else{
+                        this.pand = false
+                    }
+                    if(this.shai[obj.name] === '全部'){
+                        this.$delete(this.shai, obj.name);
+                    }
+                },
+                deleteIndex(index){
+                    this.$delete(this.shai, index);
+                    this[index].wei = 0;
+                    if(this.shang.wei === 0 && this.xia.wei === 0 && this.qun.wei === 0){
+                        this.pand = true;
+                    }else{
+                        this.pand = false
+                    }
+                    // console.log(this.index)
+                }
+            }
+        })
+    </script>
+</body>
+</html>
